@@ -1,0 +1,4 @@
+import json,hashlib,pathlib,platform,math
+mu=3.986004418e14;r=6378137.+400e3;v1=math.sqrt(mu/r);period=2*math.pi*math.sqrt(r**3/mu);v2=2*math.pi*r/period;delta=abs(v1-v2);ok=delta<1e-9
+out={"radius_m":r,"circular_velocity_method1_m_s":v1,"period_s":period,"circular_velocity_method2_m_s":v2,"method_delta_m_s":delta,"farm":144,"engine":"python-independent-crosscheck-canary","engine_version":platform.python_version(),"test":"INDEPENDENT_ORBIT_CROSSCHECK","status":"REAL_ENGINE_CANARY_OK" if ok else "FAIL","epistemic_status":"INDEPENDENT_FORMULA_CROSSCHECK_NOT_EXTERNAL_OR_PHYSICAL_VALIDATION"}
+raw=json.dumps(out,sort_keys=True).encode();out["result_sha256"]=hashlib.sha256(raw).hexdigest();pathlib.Path("artifacts").mkdir(exist_ok=True);pathlib.Path("artifacts/f144_engine_canary.json").write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out));raise SystemExit(0 if ok else 1)
